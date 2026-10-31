@@ -1,57 +1,90 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { useRouter } from "next/navigation";
+import { createSupabaseBrowserClient } from "@/lib/auth";
 
 export default function LoginPage() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  async function onSubmit(event: FormEvent) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setMessage("Esta vista es provisional; conecta Supabase para autenticación real.");
+    setLoading(true);
+    setError(null);
+
+    const supabase = createSupabaseBrowserClient();
+    if (!supabase) {
+      setError("Falta NEXT_PUBLIC_SUPABASE_URL y NEXT_PUBLIC_SUPABASE_ANON_KEY.");
+      setLoading(false);
+      return;
+    }
+
+    const { data, error: signInError } = await supabase.auth.signInWithPassword({
+      email: email.trim().toLowerCase(),
+      password,
+    });
+
+    setLoading(false);
+
+    if (signInError) {
+      setError(signInError.message || "No se pudo iniciar sesión.");
+      return;
+    }
+
+    if (!data.user) {
+      setError("No se encontró la sesión del usuario.");
+      return;
+    }
+
+    router.push("/cases");
   }
 
   return (
-    <main className="mx-auto max-w-md px-4 py-12">
-      <div className="card p-6">
-        <p className="eyebrow">Acceso</p>
-        <h1 className="mt-2 text-3xl font-bold text-ink">Iniciar sesión</h1>
-        <form onSubmit={onSubmit} className="mt-6 space-y-4">
-          <div>
-            <label htmlFor="email" className="mb-2 block text-sm font-medium text-ink">
-              Correo institucional
-            </label>
+    <main className="mx-auto max-w-xl px-4 py-10">
+      <div className="card">
+        <p className="eyebrow">Ingresar</p>
+        <h1 className="mt-2 text-3xl font-bold text-ink">Inicia sesión en TeachForge</h1>
+        <p className="mt-2 text-muted">Usa tu correo institucional para acceder a tu perfil.</p>
+
+        <form onSubmit={handleSubmit} className="mt-6 grid gap-4">
+          <label className="grid gap-2 text-sm font-medium text-ink">
+            Correo institucional
             <input
-              id="email"
+              className="input"
               type="email"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
-              className="w-full rounded-xl border border-line bg-white px-3 py-2 text-base text-ink"
-              placeholder="docente@upn.edu.pe"
+              placeholder="docente@minedu.gob.pe"
+              required
             />
-          </div>
+          </label>
 
-          <div>
-            <label htmlFor="password" className="mb-2 block text-sm font-medium text-ink">
-              Contraseña
-            </label>
+          <label className="grid gap-2 text-sm font-medium text-ink">
+            Contraseña
             <input
-              id="password"
+              className="input"
               type="password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
-              className="w-full rounded-xl border border-line bg-white px-3 py-2 text-base text-ink"
               placeholder="••••••••"
+              required
             />
-          </div>
+          </label>
 
-          <button type="submit" className="w-full rounded-xl bg-ember px-4 py-2.5 font-semibold text-white">
-            Entrar
+          {error ? (
+            <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800">
+              {error}
+            </div>
+          ) : null}
+
+          <button type="submit" className="btn btn-primary justify-self-start" disabled={loading}>
+            {loading ? "Entrando..." : "Iniciar sesión"}
           </button>
         </form>
-
-        {message ? <p className="mt-4 text-sm text-muted">{message}</p> : null}
       </div>
     </main>
   );
