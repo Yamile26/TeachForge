@@ -1,67 +1,70 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Logo } from "./Logo";
 
-const PASOS: { href: string; label: string; destino?: string }[] = [
+const PASOS: { href: string; label: string; destino?: string; nuevo?: boolean }[] = [
   { href: "/capture", label: "Capturar" },
-  { href: "/cases", label: "Biblioteca" },
+  { href: "/cases", label: "Casos" },
   // Sin caso elegido, el simulador abre el caso de ejemplo de ecuaciones.
   { href: "/simulate", label: "Simular", destino: "/simulate/seed-ecuaciones-signos" },
-  { href: "/profile", label: "Perfil" },
-  { href: "/aprende", label: "Aprende" },
+  { href: "/aprende", label: "Aprende", nuevo: true },
+  { href: "/profile", label: "Mi perfil" },
 ];
 
 export function Header({ demo }: { demo: boolean }) {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-10 border-b border-line bg-surface">
-      <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-x-5 gap-y-2 px-4 py-2.5 sm:px-6">
-        <Link href="/" aria-label="TeachForge, inicio">
-          <Logo />
+    <header className="sticky top-0 z-10 border-b border-line bg-white/95 backdrop-blur-md">
+      <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-5 gap-y-2 px-4 py-2 sm:px-6">
+        <Link href="/" aria-label="TeachForge, inicio" className="shrink-0">
+          <Image
+            src="/brand/teachforge-logo-ilustrado.jpg"
+            alt="TeachForge, empoderando a los maestros del Perú"
+            width={1536}
+            height={1024}
+            priority
+            className="h-[52px] w-auto"
+          />
         </Link>
         <nav
-          aria-label="Ciclo de TeachForge"
-          className="flex min-w-0 flex-1 gap-1 overflow-x-auto [scrollbar-width:none]"
+          aria-label="Secciones de TeachForge"
+          className="flex min-w-0 flex-1 gap-0.5 overflow-x-auto [scrollbar-width:none] sm:justify-end"
         >
-          {PASOS.map((p, i) => {
+          {PASOS.map((p) => {
             const activo = pathname.startsWith(p.href);
             return (
               <Link
                 key={p.href}
                 href={p.destino ?? p.href}
                 aria-current={activo ? "page" : undefined}
-                className={`flex items-center gap-2 rounded-full px-3 py-2 text-sm whitespace-nowrap transition ${
-                  activo ? "bg-steel text-steel-ink" : "text-muted hover:bg-sunk hover:text-ink"
+                className={`px-3 py-2 text-[15px] font-semibold whitespace-nowrap transition ${
+                  activo ? "text-ember shadow-[inset_0_-2px_0_var(--ember)]" : "rounded-[0.625rem] text-ink hover:bg-sunk"
                 }`}
               >
-                <span
-                  className={`grid h-5 w-5 place-items-center rounded-full font-mono text-[11px] ${
-                    activo ? "bg-ember text-ember-ink" : "border border-line"
-                  }`}
-                >
-                  {i + 1}
-                </span>
                 {p.label}
+                {p.nuevo && (
+                  <span className="ml-1 align-[2px] text-[10px] font-bold tracking-[0.08em] text-ia uppercase">Beta</span>
+                )}
               </Link>
             );
           })}
         </nav>
-        {demo && (
-          <span
-            className="chip bg-warn-soft text-warn"
-            title="Sin OPENAI_API_KEY o con DEMO_MODE=true: las respuestas vienen de /fixtures"
-          >
-            Modo demo
-          </span>
-        )}
         <div className="flex items-center gap-2">
-          <Link href="/login" className="btn px-3 py-1.5 text-sm">
+          {demo && (
+            <span
+              className="chip bg-warn-soft text-warn"
+              title="Sin OPENAI_API_KEY o con DEMO_MODE=true: las respuestas vienen de /fixtures"
+            >
+              Modo demo
+            </span>
+          )}
+          <Link href="/login" className="btn min-h-9 px-3 py-1.5 text-sm">
             Ingresar
           </Link>
-          <Link href="/register" className="btn btn-primary px-3 py-1.5 text-sm">
+          <Link href="/register" className="btn btn-primary min-h-9 px-3 py-1.5 text-sm">
             Crear cuenta
           </Link>
         </div>

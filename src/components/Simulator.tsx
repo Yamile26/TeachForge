@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import type { CasoGuardado, Evaluacion, Simulacion, TurnoDocente } from "@/lib/schemas";
+import PresenceRecorder from "./PresenceRecorder";
 import { EncabezadoPaso, nombreCompetencia, Puntos } from "./ui";
 
 type Mensaje = { role: "docente" | "estudiante"; alumno?: string; texto: string };
@@ -272,6 +273,8 @@ export function Simulator({ caso }: { caso: CasoGuardado }) {
                     </button>
                   ))}
                 </div>
+                {/* Responder por voz: la transcripción llega como texto de la intervención. */}
+                <PresenceRecorder onTranscript={(t) => setTexto(t)} />
                 <textarea
                   id="intervencion"
                   className="input"

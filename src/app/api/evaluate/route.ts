@@ -23,6 +23,7 @@ export async function POST(req: Request) {
 
   let evaluacion: Evaluacion;
   let uso = { tokensIn: 0, tokensOut: 0, costUsd: 0, model: "demo" };
+  let respaldo = false;
 
   if (demoActivo()) {
     evaluacion = fixtureEvaluacion();
@@ -49,10 +50,11 @@ export async function POST(req: Request) {
       evaluacion = resultado.data;
       uso = resultado.uso;
     } catch (error) {
-      if (error instanceof LlmError) {
-        return errorJson(`No se pudo evaluar (${error.code}).`, 502, error.message);
-      }
-      return errorJson("Error inesperado al evaluar.", 500);
+      if (!(error instanceof LlmError)) return errorJson("Error inesperado al evaluar.", 500);
+      // Respaldo automático: la demo sigue aunque el modelo falle.
+      console.error("[evaluate] respaldo con fixture:", error.code, error.message);
+      evaluacion = fixtureEvaluacion();
+      respaldo = true;
     }
   }
 
@@ -106,7 +108,7 @@ export async function POST(req: Request) {
         senal_de_comprension: caso.senal_de_comprension,
       },
       uso,
-      source: demoActivo() ? "demo" : "live",
+      source: demoActivo() || respaldo ? "demo" : "live",
     });
   } catch (error) {
     return errorJson(error instanceof Error ? error.message : "Error al guardar la evaluación", 500);

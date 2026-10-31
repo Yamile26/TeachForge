@@ -11,6 +11,8 @@ export async function GET() {
       "/api/simulate",
       "/api/evaluate",
       "/api/aprende",
+      "/api/transcribe",
+      "/api/auth/register",
     ],
   });
 }

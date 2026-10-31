@@ -64,6 +64,25 @@ export const RegisterRequestSchema = z.object({
   password: z.string().min(8, "La contraseña debe tener al menos 8 caracteres."),
   years_experience: z.number().int().min(0).max(60),
   institution_email: z.string().email().optional(),
+  // Datos del registro de profesores en 4 pasos; opcionales para no romper llamadas anteriores.
+  first_name: z.string().trim().min(1).max(80).optional(),
+  last_name: z.string().trim().min(1).max(80).optional(),
+  phone: z.string().trim().max(20).optional(),
+  role: PerfilRoleSchema.optional(),
+  status: z.string().trim().max(60).optional(),
+  levels: z.array(z.enum(["inicial", "primaria", "secundaria"])).max(3).optional(),
+  areas: z.array(z.string().trim().max(60)).max(10).optional(),
+  training_institution: z.string().trim().max(120).optional(),
+  school_name: z.string().trim().max(160).optional(),
+  school_code: z.string().trim().max(10).optional(),
+  school_type: z.string().trim().max(60).optional(),
+  region: z.string().trim().max(40).optional(),
+  ugel: z.string().trim().max(80).optional(),
+  zone: z.enum(["urbana", "rural"]).optional(),
+  public_alias: z.string().trim().min(2).max(60).optional(),
+  accepts_terms: z.literal(true).optional(),
+  consents_cases: z.boolean().optional(),
+  wants_news: z.boolean().optional(),
 });
 
 export const LoginRequestSchema = z.object({

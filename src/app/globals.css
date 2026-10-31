@@ -2,55 +2,35 @@
 
 /*
  * Paleta tomada del logo ilustrado de TeachForge (public/brand/teachforge-logo-ilustrado.jpg):
- * azul marino del emblema (estructura), rojo Perú de «Forge» (acento), granate de los
- * chalecos (error), dorado del foco (advertencia) y verde andino de Machu Picchu (logro).
- * Todos los colores son tokens; el modo oscuro solo los redefine.
+ * azul marino del emblema (estructura), rojo Perú de «Forge» (acento), dorado del foco,
+ * azul de los libros (secundario). Estilo institucional en tema claro, con un panal
+ * hexagonal tenue que se desliza de fondo.
  */
 :root {
-  --bg: #f7f6f9;
+  --bg: #ffffff;
   --surface: #ffffff;
-  --sunk: #eeeef4;
+  --sunk: #f4f5fa;
   --ink: #14162b;
-  --muted: #5a5d78;
-  --line: #dedfe8;
+  --muted: #5d6072;
+  --line: #dfe1ea;
   --steel: #14162b;
   --steel-ink: #ffffff;
+  --navy: #32385c;
+  --gold: #febe64;
   --ember: #d9262e;
   --ember-ink: #ffffff;
   --ember-soft: #fde6e6;
-  --good: #2f7a3e;
-  --good-soft: #e1f1e3;
-  --warn: #9a6a00;
-  --warn-soft: #fff2d6;
+  --good: #2f7d32;
+  --good-soft: #e8f6ee;
+  --warn: #8a5d00;
+  --warn-soft: #fff4d6;
   --bad: #8e1f2f;
   --bad-soft: #f6e1e4;
   --ia: #4f4aa8;
-  --ia-soft: #e8e7f7;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0d0f1e;
-    --surface: #15182c;
-    --sunk: #1c2038;
-    --ink: #ecedf5;
-    --muted: #a0a3bd;
-    --line: #2a2e4a;
-    --steel: #c9cef0;
-    --steel-ink: #14162b;
-    --ember: #f0474d;
-    --ember-ink: #1a0204;
-    --ember-soft: #3a1519;
-    --good: #6cc07a;
-    --good-soft: #16301c;
-    --warn: #febe64;
-    --warn-soft: #33280f;
-    --bad: #e8707e;
-    --bad-soft: #3a1820;
-    --ia: #a9a4f0;
-    --ia-soft: #24224a;
-    color-scheme: dark;
-  }
+  --ia-soft: #eeedfb;
+  --hex: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='97' viewBox='0 0 56 97'%3E%3Cpath d='M28 0 L56 16 L56 48 L28 64 L0 48 L0 16 Z M28 64 L28 97' fill='none' stroke='%2332385c' stroke-opacity='.10' stroke-width='1.2'/%3E%3C/svg%3E");
+  --hex-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='97' viewBox='0 0 56 97'%3E%3Cpath d='M28 0 L56 16 L56 48 L28 64 L0 48 L0 16 Z M28 64 L28 97' fill='none' stroke='%23ffffff' stroke-opacity='.16' stroke-width='1.2'/%3E%3C/svg%3E");
+  color-scheme: light;
 }
 
 @theme inline {
@@ -62,6 +42,8 @@
   --color-line: var(--line);
   --color-steel: var(--steel);
   --color-steel-ink: var(--steel-ink);
+  --color-navy: var(--navy);
+  --color-gold: var(--gold);
   --color-ember: var(--ember);
   --color-ember-ink: var(--ember-ink);
   --color-ember-soft: var(--ember-soft);
@@ -73,14 +55,28 @@
   --color-bad-soft: var(--bad-soft);
   --color-ia: var(--ia);
   --color-ia-soft: var(--ia-soft);
-  --font-display: var(--font-bricolage);
-  --font-sans: var(--font-lexend);
+  --font-display: var(--font-outfit);
+  --font-sans: var(--font-outfit);
+  --font-serif: var(--font-lora);
   --font-mono: var(--font-plex-mono);
 }
 
+/* Deriva continua del panal: 88 s por ciclo y un recorrido múltiplo exacto del mosaico. */
+@keyframes hex-drift {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 3360px 1940px;
+  }
+}
+
 body {
-  background: var(--bg);
+  background-color: var(--bg);
+  background-image: var(--hex);
+  background-size: 56px 97px;
   color: var(--ink);
+  animation: hex-drift 88s linear infinite;
 }
 
 h1,
@@ -88,40 +84,65 @@ h2,
 h3 {
   font-family: var(--font-display);
   text-wrap: balance;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.03em;
 }
 
 :focus-visible {
-  outline: 3px solid var(--ember);
-  outline-offset: 2px;
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
   border-radius: 6px;
 }
 
 /* Piezas reutilizables que con utilidades sueltas quedarían ilegibles. */
 @layer components {
   .card {
-    @apply rounded-xl border border-line bg-surface p-5;
+    @apply rounded-2xl border border-line bg-surface p-5 shadow-[0_4px_14px_rgb(20_22_43/8%)];
   }
   .eyebrow {
-    @apply text-xs font-medium tracking-[0.08em] text-muted uppercase;
+    @apply inline-flex items-center gap-2 rounded-full bg-surface px-3 py-1 text-xs font-bold tracking-[0.06em] text-navy uppercase shadow-[inset_0_0_0_1px_var(--line)];
+  }
+  .eyebrow::before {
+    content: "";
+    @apply h-2 w-2 rotate-45 rounded-[2px] bg-ember;
   }
   .btn {
-    @apply inline-flex items-center gap-2 rounded-lg border border-line bg-surface px-4 py-2.5 font-medium transition hover:bg-sunk active:translate-y-px disabled:cursor-not-allowed disabled:opacity-45;
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-[0.625rem] border border-ink bg-surface px-4 py-2.5 font-semibold text-ink transition hover:-translate-y-0.5 hover:bg-sunk hover:shadow-[0_4px_14px_rgb(20_22_43/8%)] active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-45 disabled:hover:translate-y-0;
   }
   .btn-primary {
-    @apply border-ember bg-ember font-semibold text-ember-ink hover:bg-ember hover:brightness-105;
+    @apply border-ember bg-ember font-bold text-ember-ink hover:bg-ember hover:brightness-105;
   }
   .btn-steel {
     @apply border-steel bg-steel text-steel-ink hover:bg-steel hover:brightness-110;
   }
   .chip {
-    @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium whitespace-nowrap;
+    @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-bold whitespace-nowrap;
   }
   .input {
-    @apply w-full rounded-lg border border-line bg-bg px-3 py-2.5 leading-relaxed focus:border-ember focus:ring-3 focus:ring-ember-soft focus:outline-none;
+    @apply w-full rounded-[0.625rem] border border-line bg-sunk px-3 py-2.5 leading-relaxed focus:border-ink focus:ring-3 focus:ring-ink/10 focus:outline-none;
   }
   .pizarra {
     @apply rounded-lg border-[6px] border-[#8b6a45] bg-[#1f3a33] px-4 py-3 font-mono text-[#eaf3ee];
+  }
+  .motto {
+    @apply font-serif text-xl font-bold text-navy italic;
+  }
+  /* Bloques de color con el panal claro encima (franjas, tarjetas de ruta, CTA). */
+  .hex-band {
+    @apply relative overflow-hidden;
+  }
+  .hex-band::before {
+    content: "";
+    @apply pointer-events-none absolute inset-0;
+    background-image: var(--hex-light);
+    background-size: 56px 97px;
+    animation: hex-drift 88s linear infinite;
+  }
+  .hex-band > * {
+    @apply relative;
+  }
+  .hexicon {
+    @apply grid place-items-center;
+    clip-path: polygon(25% 6.7%, 75% 6.7%, 100% 50%, 75% 93.3%, 25% 93.3%, 0 50%);
   }
 }
 

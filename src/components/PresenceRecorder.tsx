@@ -183,7 +183,7 @@ export default function PresenceRecorder({ onTranscript, maxSeconds = 90 }: Prop
   const showVideo = hasVideo && status !== "idle" && status !== "error";
 
   return (
-    <section style={{ border: "1px solid #ddd", borderRadius: 10, padding: 12, margin: "12px 0" }}>
+    <section className="grid gap-3 rounded-2xl border border-dashed border-ia bg-ia-soft p-4">
       <video
         ref={videoRef}
         muted
@@ -201,37 +201,39 @@ export default function PresenceRecorder({ onTranscript, maxSeconds = 90 }: Prop
 
       {(status === "idle" || status === "error") && (
         <div>
-          <p style={{ margin: "0 0 8px" }}>
+          <p className="mb-2 text-sm">
             <strong>Responder por voz (opcional).</strong> La cámara funciona solo como espejo: el video no se
             graba ni se envía. Solo se envía el audio para transcribir tu respuesta.
           </p>
-          <button type="button" onClick={() => enable(true)}>Activar cámara y micrófono</button>{" "}
-          <button type="button" onClick={() => enable(false)}>Solo micrófono</button>
+          <div className="flex flex-wrap gap-2">
+            <button type="button" className="btn btn-primary min-h-9 px-3 py-1.5 text-sm" onClick={() => enable(true)}>Activar cámara y micrófono</button>
+            <button type="button" className="btn min-h-9 px-3 py-1.5 text-sm" onClick={() => enable(false)}>Solo micrófono</button>
+          </div>
         </div>
       )}
 
       {(status === "ready" || status === "done") && (
-        <div>
-          <button type="button" onClick={start}>{status === "done" ? "Grabar de nuevo" : "Grabar respuesta"}</button>{" "}
-          <button type="button" onClick={() => { releaseStream(); setStatus("idle"); }}>Apagar</button>
+        <div className="flex flex-wrap gap-2">
+          <button type="button" className="btn btn-primary min-h-9 px-3 py-1.5 text-sm" onClick={start}>{status === "done" ? "Grabar de nuevo" : "Grabar respuesta"}</button>{" "}
+          <button type="button" className="btn min-h-9 px-3 py-1.5 text-sm" onClick={() => { releaseStream(); setStatus("idle"); }}>Apagar</button>
         </div>
       )}
 
       {status === "recording" && (
-        <div>
-          <span style={{ color: "#dc2626" }}>● Grabando {fmt(elapsed)} / {fmt(maxSeconds)}</span>{" "}
-          <button type="button" onClick={stop}>Detener</button>
+        <div className="flex flex-wrap items-center gap-3">
+          <span className="font-bold text-ember tabular-nums" aria-live="polite">● Grabando {fmt(elapsed)} / {fmt(maxSeconds)}</span>
+          <button type="button" className="btn btn-steel min-h-9 px-3 py-1.5 text-sm" onClick={stop}>Detener</button>
         </div>
       )}
 
       {status === "processing" && <p>Transcribiendo…</p>}
 
-      {message && <p role="status" style={{ color: "#b45309", margin: "8px 0 0" }}>{message}</p>}
+      {message && <p role="status" className="text-sm font-semibold text-warn">{message}</p>}
 
       {metrics && status === "done" && (
-        <div style={{ marginTop: 8, fontSize: 14 }}>
+        <div className="rounded-xl border border-line bg-white p-3 text-sm">
           <strong>Espejo de tu voz</strong> <em>(orientativo, sin puntaje)</em>
-          <ul style={{ margin: "4px 0 0", paddingLeft: 18 }}>
+          <ul className="mt-1 list-disc pl-5">
             <li>Duración {fmt(metrics.durationSec)} · ritmo {metrics.wpm} palabras/min</li>
             <li>
               Muletillas: {metrics.fillers.total}

@@ -14,16 +14,12 @@ export async function POST(req: Request) {
   const body = await leerBody(req, RegisterRequestSchema);
   if (!body.ok) return body.response;
 
-  const { email, password, years_experience, institution_email } = body.data;
+  const { email, password, years_experience, institution_email, ...perfil } = body.data;
   const normalizedEmail = email.trim().toLowerCase();
   const normalizedInstitutionEmail = (institution_email ?? normalizedEmail).trim().toLowerCase();
-
-  if (!validateInstitutionalEmail(normalizedInstitutionEmail)) {
-    return errorJson(
-      "Debes usar un correo institucional válido. Ejemplos: minedu.gob.pe, unprg.edu.pe, upa.edu.pe, etc.",
-      422,
-    );
-  }
+  // Muchos docentes de colegios públicos usan correo personal: se acepta cualquiera y
+  // el dominio institucional solo marca la cuenta como verificada.
+  const institutional = validateInstitutionalEmail(normalizedInstitutionEmail);
 
   const supabase = createSupabaseBrowserClient();
   if (!supabase) {
@@ -42,13 +38,31 @@ export async function POST(req: Request) {
     return errorJson("No se pudo registrar el usuario.", 400, error.message);
   }
 
-  const role = roleFromYears(years_experience);
+  const role = perfil.role ?? roleFromYears(years_experience);
   const profilePayload = {
     id: data.user?.id,
     email: normalizedEmail,
     institution_email: normalizedInstitutionEmail,
     years_experience: years_experience,
     role,
+    institutional_email: institutional,
+    first_name: perfil.first_name ?? null,
+    last_name: perfil.last_name ?? null,
+    phone: perfil.phone ?? null,
+    status: perfil.status ?? null,
+    levels: perfil.levels ?? [],
+    areas: perfil.areas ?? [],
+    training_institution: perfil.training_institution ?? null,
+    school_name: perfil.school_name ?? null,
+    school_code: perfil.school_code ?? null,
+    school_type: perfil.school_type ?? null,
+    region: perfil.region ?? null,
+    ugel: perfil.ugel ?? null,
+    zone: perfil.zone ?? null,
+    public_alias: perfil.public_alias ?? null,
+    consents_cases: perfil.consents_cases ?? false,
+    wants_news: perfil.wants_news ?? false,
+    terms_accepted_at: perfil.accepts_terms ? new Date().toISOString() : null,
     email_verified: Boolean(data.user?.email_confirmed_at),
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
@@ -71,7 +85,7 @@ export async function POST(req: Request) {
   return NextResponse.json({
     ok: true,
     user: data.user,
-    profile: { role, years_experience },
-    message: "Registro exitoso. Revisa tu correo institucional para confirmar la cuenta.",
+    profile: { role, years_experience, institutional },
+    message: "Registro exitoso. Revisa tu correo para confirmar la cuenta.",
   });
 }

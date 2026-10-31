@@ -44,7 +44,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ structured: data, source: "live", uso, intentos });
   } catch (error) {
     if (error instanceof LlmError) {
-      return errorJson(`No se pudo estructurar el caso (${error.code}).`, 502, error.message);
+      // Respaldo automático: la demo sigue aunque el modelo falle.
+      console.error("[extract] respaldo con fixture:", error.code, error.message);
+      return NextResponse.json({ structured: fixtureExtraccion(), source: "demo", uso: null, intentos: 0, aviso: "El modelo no respondió; se muestra un caso de ejemplo." });
     }
     return errorJson("Error inesperado al estructurar el caso.", 500);
   }

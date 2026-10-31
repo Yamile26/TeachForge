@@ -1,6 +1,8 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createSupabaseBrowserClient } from "@/lib/auth";
 
@@ -44,48 +46,74 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="mx-auto max-w-xl px-4 py-10">
-      <div className="card">
-        <p className="eyebrow">Ingresar</p>
-        <h1 className="mt-2 text-3xl font-bold text-ink">Inicia sesión en TeachForge</h1>
-        <p className="mt-2 text-muted">Usa tu correo institucional para acceder a tu perfil.</p>
+    <div className="grid items-start gap-6 lg:grid-cols-[0.9fr_1.3fr]">
+      <aside className="hex-band grid gap-4 rounded-2xl bg-ink p-6 text-white">
+        <Image
+          src="/brand/teachforge-logo-ilustrado.jpg"
+          alt="TeachForge, empoderando a los maestros del Perú"
+          width={1536}
+          height={1024}
+          className="h-auto w-full rounded-xl bg-white"
+        />
+        <h2 className="text-[clamp(1.5rem,2.6vw,2rem)] font-extrabold text-white">Bienvenido de vuelta</h2>
+        <p className="text-[#c9cce0]">Entra para seguir con tus prácticas o revisar cómo van tus casos.</p>
+        <ul className="grid gap-3 text-[15px] text-[#e4e6f2]">
+          <li>
+            <b className="text-white">Veteranos:</b> tus casos y cuántos docentes practicaron con ellos.
+          </li>
+          <li>
+            <b className="text-white">Docentes en formación:</b> tu perfil por competencia y tu siguiente práctica.
+          </li>
+        </ul>
+      </aside>
 
-        <form onSubmit={handleSubmit} className="mt-6 grid gap-4">
-          <label className="grid gap-2 text-sm font-medium text-ink">
-            Correo institucional
-            <input
-              className="input"
-              type="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              placeholder="docente@minedu.gob.pe"
-              required
-            />
-          </label>
+      <form onSubmit={handleSubmit} className="card grid gap-4">
+        <div>
+          <span className="eyebrow">Ingresar</span>
+          <h1 className="mt-3 text-[clamp(1.8rem,3vw,2.4rem)] font-extrabold">Inicia sesión en TeachForge</h1>
+        </div>
 
-          <label className="grid gap-2 text-sm font-medium text-ink">
-            Contraseña
-            <input
-              className="input"
-              type="password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              placeholder="••••••••"
-              required
-            />
-          </label>
+        <label className="grid gap-1.5 font-semibold">
+          Correo electrónico
+          <input
+            className="input font-normal"
+            type="email"
+            autoComplete="email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            placeholder="maria.quispe@colegio.edu.pe"
+            required
+          />
+        </label>
 
-          {error ? (
-            <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800">
-              {error}
-            </div>
-          ) : null}
+        <label className="grid gap-1.5 font-semibold">
+          Contraseña
+          <input
+            className="input font-normal"
+            type="password"
+            autoComplete="current-password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            placeholder="Tu contraseña"
+            required
+          />
+        </label>
 
-          <button type="submit" className="btn btn-primary justify-self-start" disabled={loading}>
-            {loading ? "Entrando..." : "Iniciar sesión"}
-          </button>
-        </form>
-      </div>
-    </main>
+        {error ? (
+          <div className="rounded-xl border border-ember bg-ember-soft p-3 text-sm text-bad">{error}</div>
+        ) : null}
+
+        <button type="submit" className="btn btn-primary" disabled={loading}>
+          {loading ? "Entrando…" : "Ingresar"}
+        </button>
+
+        <p className="flex items-center gap-3 text-sm text-muted before:h-px before:flex-1 before:bg-line after:h-px after:flex-1 after:bg-line">
+          ¿Aún no tienes cuenta?
+        </p>
+        <Link href="/register" className="btn">
+          Crear cuenta de docente
+        </Link>
+      </form>
+    </div>
   );
 }

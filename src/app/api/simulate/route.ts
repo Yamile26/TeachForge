@@ -69,7 +69,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ turno, ...data, source: "live", uso, intentos });
   } catch (error) {
     if (error instanceof LlmError) {
-      return errorJson(`No se pudo simular el turno (${error.code}).`, 502, error.message);
+      // Respaldo automático: la demo sigue aunque el modelo falle.
+      console.error("[simulate] respaldo con fixture:", error.code, error.message);
+      return NextResponse.json({ turno, ...fixtureSimulacion(turno), source: "demo", uso: null, aviso: "El modelo no respondió; se muestra un turno de ejemplo." });
     }
     return errorJson("Error inesperado al simular.", 500);
   }
