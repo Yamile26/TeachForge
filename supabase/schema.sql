@@ -1,53 +1,72 @@
--- TeachForge · esquema de la base de datos (Postgres/Supabase)
--- Aplicar en el SQL Editor de Supabase.
--- pgvector queda para la fase de búsqueda semántica (S12): descomentar entonces.
+"use client";
 
-create extension if not exists pgcrypto;
--- create extension if not exists vector;
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Logo } from "./Logo";
 
-create table if not exists cases (
-    id uuid primary key default gen_random_uuid(),
-    created_at timestamptz default now(),
-    author_alias text not null,
-    years_experience int,
-    subject text not null,
-    level text not null,
-    topic text not null,
-    raw_story text not null,
-    structured jsonb not null,
-    tags text[] default '{}',
-    validated_by_author boolean default false,
-    is_seed boolean default false,
-    consent_at timestamptz
-    -- , embedding vector(1536)   -- fase RAG (S12)
-);
+const PASOS: { href: string; label: string; destino?: string }[] = [
+  { href: "/capture", label: "Capturar" },
+  { href: "/cases", label: "Biblioteca" },
+  { href: "/simulate", label: "Simular", destino: "/simulate/seed-ecuaciones-signos" },
+  { href: "/profile", label: "Perfil" },
+  { href: "/aprende", label: "Aprende" },
+];
 
-create table if not exists attempts (
-    id uuid primary key default gen_random_uuid(),
-    created_at timestamptz default now(),
-    case_id uuid references cases(id) on delete cascade,
-    learner_alias text not null,
-    transcript jsonb not null,
-    hidden_states jsonb,
-    tokens_in int,
-    tokens_out int,
-    cost_usd numeric
-);
+export function Header({ demo }: { demo: boolean }) {
+  const pathname = usePathname();
 
-create table if not exists evaluations (
-    id uuid primary key default gen_random_uuid(),
-    created_at timestamptz default now(),
-    attempt_id uuid references attempts(id) on delete cascade,
-    scores jsonb not null,
-    summary text,
-    next_focus text,
-    human_reviewed boolean default false
-);
+  return (
+    <header className="sticky top-0 z-10 border-b border-line bg-surface">
+      <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-x-5 gap-y-2 px-4 py-2.5 sm:px-6">
+        <Link href="/" aria-label="TeachForge, inicio">
+          <Logo />
+        </Link>
+        <nav
+          aria-label="Ciclo de TeachForge"
+          className="flex min-w-0 flex-1 gap-1 overflow-x-auto [scrollbar-width:none]"
+        >
+          {PASOS.map((p, i) => {
+            const activo = pathname.startsWith(p.href);
+            return (
+              <Link
+                key={p.href}
+                href={p.destino ?? p.href}
+                aria-current={activo ? "page" : undefined}
+                className={`flex items-center gap-2 rounded-full px-3 py-2 text-sm whitespace-nowrap transition ${
+                  activo ? "bg-steel text-steel-ink" : "text-muted hover:bg-sunk hover:text-ink"
+                }`}
+              >
+                <span
+                  className={`grid h-5 w-5 place-items-center rounded-full font-mono text-[11px] ${
+                    activo ? "bg-ember text-ember-ink" : "border border-line"
+                  }`}
+                >
+                  {i + 1}
+                </span>
+                {p.label}
+              </Link>
+            );
+          })}
+        </nav>
 
-create index if not exists cases_created_at_idx on cases (created_at desc);
-create index if not exists cases_is_seed_idx on cases (is_seed);
-create index if not exists attempts_alias_idx on attempts (learner_alias);
+        <div className="flex items-center gap-2">
+          <Link href="/login" className="btn btn-steel">
+            Login
+          </Link>
+          <Link href="/register" className="btn btn-primary">
+            Registrarme
+          </Link>
+        </div>
 
--- La app usa la service key desde el servidor (no hay login en el MVP),
--- así que RLS no se habilita todavía. Al añadir auth: habilitar RLS y
--- filtrar todas las lecturas por el usuario de la sesión.
+        {demo && (
+          <span
+            className="chip bg-warn-soft text-warn"
+            title="Sin OPENAI_API_KEY o con DEMO_MODE=true: las respuestas vienen de /fixtures"
+          >
+            Modo demo
+          </span>
+        )}
+      </div>
+    </header>
+  );
+}
