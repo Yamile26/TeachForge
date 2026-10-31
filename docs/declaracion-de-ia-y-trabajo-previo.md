@@ -3,7 +3,7 @@
 ## Uso de IA en la construcción
 
 - **Asistentes de código** (Claude, Freebuff, v0 de Vercel) para escribir y revisar el código, la interfaz y este documento.
-- **Gemini** como motor del producto: extracción del caso, estudiantes simulados y evaluación. Tres roles con prompts distintos, no un sistema multiagente.
+- **OpenAI** como motor del producto: extracción del caso, estudiantes simulados y evaluación. Tres roles con prompts distintos, no un sistema multiagente.
 
 ## Uso de IA en el producto
 

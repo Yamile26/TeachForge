@@ -6,7 +6,7 @@ import type { CasoEstructurado, Evaluacion, Simulacion } from "./schemas";
 
 /**
  * DEMO_MODE: la demo completa sigue funcionando aunque la API falle.
- * También se activa sola si no hay GEMINI_API_KEY, para poder construir la UI.
+ * También se activa sola si no hay OPENAI_API_KEY, para poder construir la UI.
  */
 export function demoActivo(): boolean {
   return process.env.DEMO_MODE === "true" || !llmConfigurado();

@@ -1,14 +1,15 @@
 /**
  * Costo por sesión. Los precios son de referencia (USD por 1M de tokens) y se
  * pueden ajustar por env; el jurado ve el costo medido, no una promesa.
- * Verificar precios vigentes en https://ai.google.dev/gemini-api/docs/pricing
+ * Verificar precios vigentes en https://developers.openai.com/api/docs/pricing
  */
 
 const PRECIOS: Record<string, { in: number; out: number }> = {
-  "gemini-pro-latest": { in: 1.25, out: 10 },
-  "gemini-2.5-pro": { in: 1.25, out: 10 },
-  "gemini-flash-latest": { in: 0.3, out: 2.5 },
-  "gemini-2.5-flash": { in: 0.3, out: 2.5 },
+  "gpt-4.1": { in: 2.0, out: 8.0 },
+  "gpt-4.1-mini": { in: 0.4, out: 1.6 },
+  "gpt-4.1-nano": { in: 0.1, out: 0.4 },
+  "gpt-4o": { in: 2.5, out: 10.0 },
+  "gpt-4o-mini": { in: 0.15, out: 0.6 },
 };
 
 export type Uso = {
@@ -21,8 +22,14 @@ export type Uso = {
 function precioDe(model: string) {
   const exacto = PRECIOS[model];
   if (exacto) return exacto;
-  if (model.includes("flash")) return PRECIOS["gemini-flash-latest"];
-  return PRECIOS["gemini-pro-latest"];
+  // Los nombres con fecha (gpt-4.1-2025-04-14) heredan el precio de su familia.
+  const familia = Object.keys(PRECIOS)
+    .sort((a, b) => b.length - a.length)
+    .find((nombre) => model.startsWith(nombre));
+  if (familia) return PRECIOS[familia];
+  if (model.includes("nano")) return PRECIOS["gpt-4.1-nano"];
+  if (model.includes("mini")) return PRECIOS["gpt-4.1-mini"];
+  return PRECIOS["gpt-4.1"];
 }
 
 export function costoUsd(model: string, tokensIn: number, tokensOut: number): number {
