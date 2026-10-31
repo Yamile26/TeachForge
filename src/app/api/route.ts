@@ -12,6 +12,7 @@ export async function GET() {
       "/api/evaluate",
       "/api/aprende",
       "/api/transcribe",
+      "/api/presence-feedback",
       "/api/auth/register",
     ],
   });

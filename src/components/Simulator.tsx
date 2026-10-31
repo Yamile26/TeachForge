@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import type { CasoGuardado, Evaluacion, Simulacion, TurnoDocente } from "@/lib/schemas";
-import PresenceRecorder from "./PresenceRecorder";
+import { leerPizarra } from "@/lib/pizarra";
+import PresenceRecorder, { type VoiceFeedback } from "./PresenceRecorder";
 import { EncabezadoPaso, nombreCompetencia, Puntos } from "./ui";
 
 type Mensaje = { role: "docente" | "estudiante"; alumno?: string; texto: string };
@@ -44,10 +45,12 @@ export function Simulator({ caso }: { caso: CasoGuardado }) {
   const [fuente, setFuente] = useState<"demo" | "live" | null>(null);
   const [evaluacion, setEvaluacion] = useState<ResultadoEvaluacion | null>(null);
   const [verVeterano, setVerVeterano] = useState(false);
+  const [voz, setVoz] = useState<(VoiceFeedback & { turno: number })[]>([]);
   const logRef = useRef<HTMLDivElement>(null);
   const evalRef = useRef<HTMLElement>(null);
 
   const terminado = turnos.length >= 3;
+  const pizarra = leerPizarra(caso.error_frecuente.ejemplo_alumno, caso.tema);
   const alumnos = [
     ...new Set([
       ...caso.perfiles_estudiantes.map((p) => p.nombre),
@@ -130,6 +133,7 @@ export function Simulator({ caso }: { caso: CasoGuardado }) {
     setTurnos([]);
     setEstados([]);
     setEvaluacion(null);
+    setVoz([]);
     setVerVeterano(false);
     setError(null);
     setTexto("");
@@ -152,9 +156,28 @@ export function Simulator({ caso }: { caso: CasoGuardado }) {
 
       <div className="grid items-start gap-4.5 md:grid-cols-[280px_1fr]">
         <aside className="grid gap-3.5">
-          <div className="pizarra">
-            <small className="mb-1.5 block font-sans text-[11px] opacity-70">En la pizarra</small>
-            {caso.error_frecuente.ejemplo_alumno || caso.tema}
+          <div className="pizarra grid gap-2" aria-label="Pizarra">
+            <small className="block font-sans text-[11px] opacity-70">En la pizarra</small>
+            <p className="text-[17px]">{pizarra.enunciado}</p>
+            {pizarra.escrito && (
+              <p className="grid gap-0.5">
+                <small className="font-sans text-[11px] text-[#ffb4b4]">✗ Así lo resolvió el alumno</small>
+                <span className="text-[#ffd0d0] line-through decoration-[#ff8a8a] decoration-2">{pizarra.escrito}</span>
+              </p>
+            )}
+            {pizarra.pasosCorrectos &&
+              (terminado ? (
+                <div className="grid gap-0.5 border-t border-white/20 pt-2">
+                  <small className="font-sans text-[11px] text-[#bff0c8]">✓ Resolución correcta</small>
+                  {pizarra.pasosCorrectos.map((p) => (
+                    <span key={p} className="text-[13px] text-[#dff7e4]">
+                      {p}
+                    </span>
+                  ))}
+                </div>
+              ) : (
+                <small className="font-sans text-[11px] opacity-70">La resolución correcta aparece al terminar la clase.</small>
+              ))}
           </div>
 
           <div className="card grid gap-2.5 p-4">
@@ -274,7 +297,11 @@ export function Simulator({ caso }: { caso: CasoGuardado }) {
                   ))}
                 </div>
                 {/* Responder por voz: la transcripción llega como texto de la intervención. */}
-                <PresenceRecorder onTranscript={(t) => setTexto(t)} />
+                <PresenceRecorder
+                  contexto={`${caso.titulo}. Error de los alumnos: ${caso.error_frecuente.descripcion}`}
+                  onTranscript={(t) => setTexto(t)}
+                  onFeedback={(fb) => setVoz((v) => [...v.filter((x) => x.turno !== turnos.length + 1), { ...fb, turno: turnos.length + 1 }])}
+                />
                 <textarea
                   id="intervencion"
                   className="input"
@@ -330,6 +357,31 @@ export function Simulator({ caso }: { caso: CasoGuardado }) {
             ))}
             <p className="border-t border-line pt-4 text-muted">{evaluacion.summary}</p>
           </div>
+
+          {voz.length > 0 && (
+            <div className="card grid gap-3">
+              <h3 className="text-[17px] font-bold">Cómo hablaste en la clase</h3>
+              <p className="text-sm text-muted">
+                Espejo orientativo de los turnos que respondiste por voz. Describe, no califica, y no forma parte de la rúbrica.
+              </p>
+              {voz.map((v) => (
+                <div key={v.turno} className="grid gap-1.5 border-t border-line pt-3 text-sm">
+                  <b>Turno {v.turno}</b>
+                  <ul className="list-disc pl-5">
+                    {v.observaciones.map((o, i) => (
+                      <li key={i}>
+                        {o.momento && <span className="font-mono text-xs text-muted">{o.momento} · </span>}
+                        {o.texto}
+                      </li>
+                    ))}
+                  </ul>
+                  <p>
+                    <b>Sugerencia:</b> {v.sugerencia}
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
 
           <div className="grid gap-4 md:grid-cols-2">
             <div className="grid content-start gap-2 rounded-xl bg-steel p-5 text-steel-ink">

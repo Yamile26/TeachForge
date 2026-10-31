@@ -12,10 +12,20 @@ import {
   type VoiceMetrics,
 } from "@/lib/voiceMetrics";
 
+export type VoiceFeedback = {
+  observaciones: { texto: string; momento: string | null }[];
+  sugerencia: string;
+  source: "live" | "demo";
+};
+
 type Props = {
   /** Recibe la transcripción para ponerla en la respuesta del simulador. */
   onTranscript: (text: string, metrics: VoiceMetrics) => void;
   maxSeconds?: number;
+  /** Contexto breve del caso, para que el feedback hable de esta clase. */
+  contexto?: string;
+  /** Recibe el feedback sobre cómo habló el docente en este turno. */
+  onFeedback?: (feedback: VoiceFeedback) => void;
 };
 
 type Status = "idle" | "ready" | "recording" | "processing" | "done" | "error";
@@ -33,7 +43,7 @@ function fmt(sec: number) {
   return `${m}:${s.toString().padStart(2, "0")}`;
 }
 
-export default function PresenceRecorder({ onTranscript, maxSeconds = 90 }: Props) {
+export default function PresenceRecorder({ onTranscript, maxSeconds = 90, contexto, onFeedback }: Props) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const recorderRef = useRef<MediaRecorder | null>(null);
@@ -46,6 +56,8 @@ export default function PresenceRecorder({ onTranscript, maxSeconds = 90 }: Prop
   const [elapsed, setElapsed] = useState(0);
   const [message, setMessage] = useState<string | null>(null);
   const [metrics, setMetrics] = useState<VoiceMetrics | null>(null);
+  const [feedback, setFeedback] = useState<VoiceFeedback | null>(null);
+  const [pidiendoFeedback, setPidiendoFeedback] = useState(false);
 
   // Liberar cámara y micrófono al salir de la página
   useEffect(() => {
@@ -172,11 +184,33 @@ export default function PresenceRecorder({ onTranscript, maxSeconds = 90 }: Prop
 
       const m = computeVoiceMetrics({ text, durationSec, words, segments });
       setMetrics(m);
+      setFeedback(null);
       onTranscript(text, m);
+      void pedirFeedback(text, m);
       setStatus("done");
     } catch {
       setMessage("No se pudo transcribir. Intenta de nuevo o escribe tu respuesta.");
       setStatus("ready");
+    }
+  }
+
+  // Feedback sobre cómo habló: lo redacta el modelo o, si no responde, reglas sobre las métricas.
+  async function pedirFeedback(text: string, m: VoiceMetrics) {
+    setPidiendoFeedback(true);
+    try {
+      const res = await fetch("/api/presence-feedback", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ text, metrics: m, contexto }),
+      });
+      if (!res.ok) return;
+      const data = (await res.json()) as VoiceFeedback;
+      setFeedback(data);
+      onFeedback?.(data);
+    } catch {
+      /* el espejo de métricas sigue visible aunque no llegue el feedback */
+    } finally {
+      setPidiendoFeedback(false);
     }
   }
 
@@ -256,6 +290,24 @@ export default function PresenceRecorder({ onTranscript, maxSeconds = 90 }: Prop
               </li>
             )}
           </ul>
+          {pidiendoFeedback && <p className="mt-2 text-muted">Preparando feedback sobre cómo hablaste…</p>}
+          {feedback && (
+            <div className="mt-3 grid gap-1.5 border-t border-line pt-3">
+              <strong>Cómo hablaste</strong>
+              <ul className="list-disc pl-5">
+                {feedback.observaciones.map((o, i) => (
+                  <li key={i}>
+                    {o.momento && <span className="font-mono text-xs text-muted">{o.momento} · </span>}
+                    {o.texto}
+                  </li>
+                ))}
+              </ul>
+              <p className="rounded-lg bg-ember-soft px-3 py-2">
+                <b>Para el siguiente turno:</b> {feedback.sugerencia}
+              </p>
+              {feedback.source === "demo" && <small className="text-muted">Feedback generado por reglas sobre tus métricas.</small>}
+            </div>
+          )}
         </div>
       )}
     </section>
