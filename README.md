@@ -1,3 +1,5 @@
+<p align="center"><img src="public/brand/teachforge-logo-horizontal.png" alt="TeachForge" width="420"></p>
+
 # TeachForge
 
 **El criterio pedagógico de un docente no debería jubilarse con él.**
@@ -95,16 +97,18 @@ prompts/        prompts en markdown (extractor, simulación, evaluación, seeds)
 supabase/       schema.sql
 fixtures/       casos de ejemplo y respuestas guardadas para DEMO_MODE
 src/app/        páginas + rutas /api
-src/lib/        llm, db, schemas, rubric, cost, demo
+src/lib/        llm, db, schemas, rubric, cost, demo, profile
+src/components/ cabecera, logo, captura, biblioteca, simulador
+public/brand/   logo e ícono de TeachForge (SVG y PNG)
 tests/          validación de esquemas y rúbrica
 docs/           problema y evidencia, arquitectura, rúbrica, declaración de IA
 ```
 
 ## Qué funciona hoy y qué es hoja de ruta
 
-**Funciona hoy:** contratos de datos con Zod, capa de IA con reintento y costo por sesión, extractor, simulador de 3 turnos, evaluador con citas, perfil por competencia, biblioteca con casos de ejemplo, modo demo con fixtures y store en memoria.
+**Funciona hoy:** interfaz completa del ciclo (captura guiada con revisión y consentimiento, biblioteca Real/Ejemplo, clase simulada de 3 turnos con Momento IA, evaluación con citas y estrategia del veterano, perfil con evolución), contratos de datos con Zod, capa de IA con reintento y costo por sesión, extractor, simulador de 3 turnos, evaluador con citas, perfil por competencia, biblioteca con casos de ejemplo, modo demo con fixtures y store en memoria.
 
-**Hoja de ruta (no se afirma como hecho):** interfaz final (v0), persistencia real en Supabase, dictado por voz, 15 casos semilla, búsqueda semántica con pgvector, grafo de conocimiento, recomendación adaptativa longitudinal.
+**Hoja de ruta (no se afirma como hecho):** persistencia real en Supabase, dictado por voz, 15 casos semilla, búsqueda semántica con pgvector, grafo de conocimiento, recomendación adaptativa longitudinal.
 
 ## Ética y límites
 

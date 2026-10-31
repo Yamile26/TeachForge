@@ -5,92 +5,116 @@ import { llmConfigurado } from "@/lib/llm";
 
 export const dynamic = "force-dynamic";
 
-const pantallas = [
-  {
-    href: "/capture",
-    titulo: "Captura",
-    detalle: "El docente veterano cuenta un caso real; la IA lo estructura y él lo valida.",
-    estado: "Contrato listo · UI en v0",
-  },
-  {
-    href: "/cases",
-    titulo: "Biblioteca de casos",
-    detalle: "Casos reales y de ejemplo, distinguidos a simple vista.",
-    estado: "Contrato listo · UI en v0",
-  },
-  {
-    href: "/simulate/seed-ecuaciones-signos",
-    titulo: "Simulación",
-    detalle: "3 turnos con 3 estudiantes simulados que mantienen el error hasta que se ataca la causa.",
-    estado: "Contrato listo · UI en v0",
-  },
-  {
-    href: "/profile",
-    titulo: "Perfil de competencias",
-    detalle: "Puntajes 0-3 con evidencia citada y la siguiente práctica recomendada.",
-    estado: "Contrato listo · UI en v0",
-  },
+const ciclo = [
+  ["Captura", "El veterano cuenta su caso en 5 a 8 minutos"],
+  ["Validación", "Él mismo revisa y aprueba el caso"],
+  ["Simulación", "3 turnos con 3 estudiantes simulados"],
+  ["Evaluación", "Rúbrica 0–3 con citas textuales"],
+  ["Perfil", "Evolución y siguiente práctica"],
 ];
 
 export default function Home() {
   return (
-    <main className="mx-auto max-w-5xl px-6 py-16">
-      <p className="text-sm font-medium uppercase tracking-[0.2em] text-neutral-500">
-        DSC HACK 2026 · Grieta 03
-      </p>
-      <h1 className="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">TeachForge</h1>
-      <p className="mt-4 max-w-2xl text-lg text-neutral-600 dark:text-neutral-300">
-        El criterio pedagógico de un docente no debería jubilarse con él. Capturamos la
-        experiencia de docentes veteranos, la convertimos en casos validados por ellos y la
-        usamos para entrenar a docentes nuevos con simulaciones de aula.
-      </p>
-
-      <dl className="mt-10 grid gap-4 sm:grid-cols-3">
-        <div className="rounded-xl border border-neutral-200 p-4 dark:border-neutral-800">
-          <dt className="text-xs uppercase tracking-wide text-neutral-500">Modo de datos</dt>
-          <dd className="mt-1 font-mono text-sm">{demoActivo() ? "demo (fixtures)" : "live"}</dd>
+    <div className="grid grid-cols-1 gap-10">
+      <section className="grid items-center gap-8 md:grid-cols-[1.3fr_1fr]">
+        <div>
+          <p className="eyebrow">DSC HACK 2026 · Educación 2036 · Grieta 03: docentes sin relevo</p>
+          <h1 className="mt-3 text-[clamp(28px,5vw,42px)] leading-tight font-extrabold">
+            El criterio pedagógico de un docente no debería jubilarse con él.
+          </h1>
+          <p className="mt-4 max-w-[56ch] text-lg text-muted">
+            TeachForge convierte lo que un docente veterano aprendió en años de aula en casos que
+            él mismo valida, y los usa para que docentes nuevos practiquen con estudiantes
+            simulados.
+          </p>
+          <p className="mt-5 max-w-[46ch] border-l-3 border-ember pl-4 font-display text-xl font-medium">
+            Qué error comete el alumno, por qué lo comete y qué explicación lo destraba.
+          </p>
         </div>
-        <div className="rounded-xl border border-neutral-200 p-4 dark:border-neutral-800">
-          <dt className="text-xs uppercase tracking-wide text-neutral-500">Base de datos</dt>
-          <dd className="mt-1 font-mono text-sm">{dbMode()}</dd>
-        </div>
-        <div className="rounded-xl border border-neutral-200 p-4 dark:border-neutral-800">
-          <dt className="text-xs uppercase tracking-wide text-neutral-500">OpenAI</dt>
-          <dd className="mt-1 font-mono text-sm">
-            {llmConfigurado() ? "configurado" : "sin API key"}
-          </dd>
-        </div>
-      </dl>
 
-      <h2 className="mt-14 text-sm font-medium uppercase tracking-wider text-neutral-500">
-        El ciclo
-      </h2>
-      <ul className="mt-4 grid gap-3 sm:grid-cols-2">
-        {pantallas.map((p) => (
-          <li key={p.href}>
-            <Link
-              href={p.href}
-              className="block h-full rounded-xl border border-neutral-200 p-5 transition hover:border-neutral-400 dark:border-neutral-800 dark:hover:border-neutral-600"
-            >
-              <span className="font-medium">{p.titulo}</span>
-              <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">{p.detalle}</p>
-              <p className="mt-3 text-xs text-neutral-500">{p.estado}</p>
-            </Link>
-          </li>
-        ))}
-      </ul>
+        <div className="grid gap-3.5">
+          <p className="eyebrow">¿Cómo entras hoy?</p>
+          <RolLink
+            href="/capture"
+            titulo="Soy docente con experiencia"
+            detalle="Cuenta un caso real de tu aula en 5 a 8 minutos."
+            tono="ember"
+            icono={
+              <path d="M12 3a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V6a3 3 0 0 1 3-3zM19 11a7 7 0 0 1-14 0M12 18v3" />
+            }
+          />
+          <RolLink
+            href="/cases"
+            titulo="Me estoy formando como docente"
+            detalle="Practica un caso en una clase simulada de 3 turnos."
+            tono="steel"
+            icono={<path d="M3 7l9-4 9 4-9 4-9-4zM7 9v5c0 1.5 2.5 3 5 3s5-1.5 5-3V9" />}
+          />
+        </div>
+      </section>
 
-      <p className="mt-12 text-sm text-neutral-500">
-        Los contratos de la API están en{" "}
-        <code className="rounded bg-neutral-100 px-1.5 py-0.5 dark:bg-neutral-900">
-          /api/health
-        </code>
-        , <code className="rounded bg-neutral-100 px-1.5 py-0.5 dark:bg-neutral-900">/api/extract</code>,{" "}
-        <code className="rounded bg-neutral-100 px-1.5 py-0.5 dark:bg-neutral-900">/api/cases</code>,{" "}
-        <code className="rounded bg-neutral-100 px-1.5 py-0.5 dark:bg-neutral-900">/api/simulate</code>,{" "}
-        <code className="rounded bg-neutral-100 px-1.5 py-0.5 dark:bg-neutral-900">/api/evaluate</code> y{" "}
-        <code className="rounded bg-neutral-100 px-1.5 py-0.5 dark:bg-neutral-900">/api/profile</code>.
-      </p>
-    </main>
+      <section className="card overflow-x-auto p-1.5">
+        <ol className="flex min-w-max sm:min-w-0">
+          {ciclo.map(([titulo, detalle], i) => (
+            <li key={titulo} className="grid flex-1 basis-36 gap-1 border-t-3 border-ember px-4 py-3.5">
+              <span className="font-mono text-xs text-ember">0{i + 1}</span>
+              <b className="font-display">{titulo}</b>
+              <span className="text-sm text-muted">{detalle}</span>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted">
+        <span>
+          Datos: <span className="font-mono text-ink">{demoActivo() ? "demo (fixtures)" : "en vivo"}</span>
+        </span>
+        <span>
+          Base: <span className="font-mono text-ink">{dbMode()}</span>
+        </span>
+        <span>
+          Modelo: <span className="font-mono text-ink">{llmConfigurado() ? "configurado" : "sin API key"}</span>
+        </span>
+        <Link href="/api" className="underline underline-offset-2 hover:text-ink">
+          Índice de la API
+        </Link>
+      </section>
+    </div>
+  );
+}
+
+function RolLink({
+  href,
+  titulo,
+  detalle,
+  tono,
+  icono,
+}: {
+  href: string;
+  titulo: string;
+  detalle: string;
+  tono: "ember" | "steel";
+  icono: React.ReactNode;
+}) {
+  return (
+    <Link
+      href={href}
+      className="grid grid-cols-[auto_1fr_auto] items-center gap-3.5 rounded-xl border border-line bg-surface p-4 transition hover:-translate-y-0.5 hover:border-ember"
+    >
+      <span
+        className={`grid h-11 w-11 place-items-center rounded-xl ${
+          tono === "ember" ? "bg-ember-soft text-ember" : "bg-sunk text-steel"
+        }`}
+      >
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+          {icono}
+        </svg>
+      </span>
+      <span>
+        <b>{titulo}</b>
+        <small className="block text-[13px] text-muted">{detalle}</small>
+      </span>
+      <span aria-hidden="true">→</span>
+    </Link>
   );
 }

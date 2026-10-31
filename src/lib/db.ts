@@ -204,7 +204,10 @@ export async function guardarEvaluacion(
 export async function historialDe(alias: string) {
   const sb = supabase();
   if (!sb) {
-    const intentos = memoria().intentos.filter((i) => i.learner_alias === alias);
+    // En memoria los intentos se guardan del más nuevo al más viejo; el perfil los quiere en orden.
+    const intentos = memoria()
+      .intentos.filter((i) => i.learner_alias === alias)
+      .reverse();
     return intentos.flatMap((intento) => {
       const evaluacion = memoria().evaluaciones.find((e) => e.attempt_id === intento.id);
       return evaluacion ? [{ ...evaluacion, attempt_id: intento.id }] : [];
