@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { responderPreguntaCurriculum } from "@/lib/curriculum";
+import { respondersPreguntaCurriculum } from "@/lib/curriculum";
 import { errorJson, leerBody } from "@/lib/http";
 
 const AprenderRequestSchema = z.object({
@@ -18,7 +18,7 @@ export async function POST(req: Request) {
   const { question, documentId } = body.data;
 
   try {
-    const respuesta = await responderPreguntaCurriculum(question);
+    const respuesta = await respondersPreguntaCurriculum(question);
     return NextResponse.json({
       question,
       documentId: documentId ?? "curriculum-secundaria",
