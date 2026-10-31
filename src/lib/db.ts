@@ -107,9 +107,28 @@ export async function listarCasos(): Promise<CasoGuardado[]> {
   return (data ?? []).map(filaACaso);
 }
 
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 export async function obtenerCaso(id: string): Promise<CasoGuardado | null> {
   const sb = supabase();
   if (!sb) return memoria().casos.find((c) => c.id === id) ?? null;
+
+  // Los enlaces fijos usan el id del fixture ("seed-ecuaciones-signos"), pero en
+  // Supabase la columna es uuid: se busca el caso sembrado con el mismo tema.
+  if (!UUID.test(id)) {
+    const seed = (seedCases as CasoGuardado[]).find((c) => c.id === id);
+    if (!seed) return null;
+    const { data, error } = await sb
+      .from("cases")
+      .select("*")
+      .eq("is_seed", true)
+      .eq("topic", seed.topic)
+      .limit(1)
+      .maybeSingle();
+    if (error) throw new Error(`Supabase (obtener caso semilla): ${error.message}`);
+    return data ? filaACaso(data as Row) : null;
+  }
+
   const { data, error } = await sb.from("cases").select("*").eq("id", id).maybeSingle();
   if (error) throw new Error(`Supabase (obtener caso): ${error.message}`);
   return data ? filaACaso(data as Row) : null;
