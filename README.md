@@ -41,7 +41,7 @@ Sin evidencia en la transcripción, la competencia queda en **«sin evidencia»*
 
 ## Stack
 
-Next.js (App Router, TypeScript) · Tailwind CSS · Zod · Gemini (`@google/genai`) · Supabase (Postgres) · deploy en Vercel.
+Next.js (App Router, TypeScript) · Tailwind CSS · Zod · OpenAI (Chat Completions) · Supabase (Postgres) · deploy en Vercel.
 
 Tres roles de IA con prompts distintos, **no** un sistema multiagente: extractor, estudiantes simulados y evaluador. Un modelo más capaz para extraer y evaluar, uno más barato para la simulación. El proveedor está aislado en [`src/lib/llm.ts`](src/lib/llm.ts).
 
@@ -49,11 +49,11 @@ Tres roles de IA con prompts distintos, **no** un sistema multiagente: extractor
 
 ```bash
 npm install
-cp .env.example .env.local   # y pon tu GEMINI_API_KEY
+cp .env.example .env.local   # y pon tu OPENAI_API_KEY
 npm run dev
 ```
 
-Abre <http://localhost:3000>. Sin `GEMINI_API_KEY` la app arranca en **modo demo** con los fixtures de `/fixtures`, así se puede construir la interfaz sin gastar tokens.
+Abre <http://localhost:3000>. Sin `OPENAI_API_KEY` la app arranca en **modo demo** con los fixtures de `/fixtures`, así se puede construir la interfaz sin gastar tokens.
 
 Comprobaciones:
 
@@ -68,8 +68,8 @@ curl "localhost:3000/api/health?llm=1"   # hace una llamada real al modelo
 
 | Variable | Para qué |
 | --- | --- |
-| `GEMINI_API_KEY` | Servidor. Sin ella, modo demo. |
-| `GEMINI_MODEL_SMART` / `GEMINI_MODEL_FAST` | Modelo para extraer/evaluar y para simular. |
+| `OPENAI_API_KEY` | Servidor. Sin ella, modo demo. |
+| `OPENAI_MODEL_SMART` / `OPENAI_MODEL_FAST` | Modelo para extraer/evaluar y para simular. |
 | `NEXT_PUBLIC_SUPABASE_URL` / `SUPABASE_SERVICE_KEY` | Postgres. Sin ellas, store en memoria. |
 | `DEMO_MODE` | `true` fuerza fixtures: fallback de la demo. |
 

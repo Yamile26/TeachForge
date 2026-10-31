@@ -1,10 +1,12 @@
-import { GoogleGenAI } from "@google/genai";
 import type { ZodType } from "zod";
 import { costoUsd, type Uso } from "./cost";
 
 /**
  * Único punto del proyecto que habla con el proveedor de IA.
  * Si mañana cambiamos de proveedor, solo cambia este archivo.
+ *
+ * Hoy: OpenAI Chat Completions con `response_format: json_object`.
+ * Antes: Gemini. El resto del código no se enteró del cambio.
  */
 
 export type Tier = "smart" | "fast";
@@ -21,23 +23,16 @@ export class LlmError extends Error {
   }
 }
 
+const BASE_URL = process.env.OPENAI_BASE_URL ?? "https://api.openai.com/v1";
+
 export function modeloDe(tier: Tier): string {
   return tier === "smart"
-    ? (process.env.GEMINI_MODEL_SMART ?? "gemini-pro-latest")
-    : (process.env.GEMINI_MODEL_FAST ?? "gemini-flash-latest");
+    ? (process.env.OPENAI_MODEL_SMART ?? "gpt-4.1")
+    : (process.env.OPENAI_MODEL_FAST ?? "gpt-4.1-mini");
 }
 
 export function llmConfigurado(): boolean {
-  return Boolean(process.env.GEMINI_API_KEY);
-}
-
-let cliente: GoogleGenAI | null = null;
-
-function getCliente(): GoogleGenAI {
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) throw new LlmError("Falta GEMINI_API_KEY en el entorno.", "not_configured");
-  cliente ??= new GoogleGenAI({ apiKey });
-  return cliente;
+  return Boolean(process.env.OPENAI_API_KEY);
 }
 
 /** Los modelos a veces envuelven el JSON en ```json ... ``` o agregan texto. */
@@ -49,6 +44,61 @@ function extraerJson(texto: string): string {
   if (inicio === -1) return candidato;
   const cierre = Math.max(candidato.lastIndexOf("}"), candidato.lastIndexOf("]"));
   return cierre > inicio ? candidato.slice(inicio, cierre + 1) : candidato.slice(inicio);
+}
+
+type RespuestaOpenAi = {
+  choices?: { message?: { content?: string | null } }[];
+  usage?: { prompt_tokens?: number; completion_tokens?: number };
+  error?: { message?: string };
+};
+
+async function llamarModelo(
+  model: string,
+  system: string,
+  user: string,
+  temperature: number,
+): Promise<{ texto: string; tokensIn: number; tokensOut: number }> {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) throw new LlmError("Falta OPENAI_API_KEY en el entorno.", "not_configured");
+
+  let res: Response;
+  try {
+    res = await fetch(`${BASE_URL}/chat/completions`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model,
+        temperature,
+        max_completion_tokens: 3000,
+        response_format: { type: "json_object" },
+        messages: [
+          { role: "system", content: system },
+          { role: "user", content: user },
+        ],
+      }),
+    });
+  } catch (error) {
+    const mensaje = error instanceof Error ? error.message : String(error);
+    throw new LlmError(`No se pudo contactar a OpenAI: ${mensaje}`, "provider");
+  }
+
+  const json = (await res.json().catch(() => ({}))) as RespuestaOpenAi;
+
+  if (!res.ok) {
+    throw new LlmError(
+      `OpenAI respondió ${res.status}: ${json.error?.message ?? "sin detalle"}`,
+      "provider",
+    );
+  }
+
+  return {
+    texto: json.choices?.[0]?.message?.content ?? "",
+    tokensIn: json.usage?.prompt_tokens ?? 0,
+    tokensOut: json.usage?.completion_tokens ?? 0,
+  };
 }
 
 export type GenerateJsonOptions<T> = {
@@ -77,7 +127,6 @@ export async function generateJson<T>({
   tier = "smart",
   temperature = 0.4,
 }: GenerateJsonOptions<T>): Promise<GenerateJsonResult<T>> {
-  const ai = getCliente();
   const model = modeloDe(tier);
 
   let uso: Uso = { tokensIn: 0, tokensOut: 0, costUsd: 0, model };
@@ -85,31 +134,14 @@ export async function generateJson<T>({
   let promptUsuario = user;
 
   for (let intento = 1; intento <= 2; intento++) {
-    let texto = "";
-    try {
-      const response = await ai.models.generateContent({
-        model,
-        contents: promptUsuario,
-        config: {
-          systemInstruction: system,
-          responseMimeType: "application/json",
-          temperature,
-        },
-      });
-      texto = response.text ?? "";
+    const { texto, tokensIn, tokensOut } = await llamarModelo(model, system, promptUsuario, temperature);
 
-      const tokensIn = response.usageMetadata?.promptTokenCount ?? 0;
-      const tokensOut = response.usageMetadata?.candidatesTokenCount ?? 0;
-      uso = {
-        tokensIn: uso.tokensIn + tokensIn,
-        tokensOut: uso.tokensOut + tokensOut,
-        costUsd: Math.round((uso.costUsd + costoUsd(model, tokensIn, tokensOut)) * 1e6) / 1e6,
-        model,
-      };
-    } catch (error) {
-      const mensaje = error instanceof Error ? error.message : String(error);
-      throw new LlmError(`El proveedor de IA falló: ${mensaje}`, "provider");
-    }
+    uso = {
+      tokensIn: uso.tokensIn + tokensIn,
+      tokensOut: uso.tokensOut + tokensOut,
+      costUsd: Math.round((uso.costUsd + costoUsd(model, tokensIn, tokensOut)) * 1e6) / 1e6,
+      model,
+    };
 
     let parseado: unknown;
     try {

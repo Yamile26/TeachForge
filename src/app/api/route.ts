@@ -19,7 +19,7 @@ export async function GET(req: Request) {
         metodo: "GET",
         ruta: "/api/health",
         descripcion: "Estado del sistema: modo demo, modelo y base de datos.",
-        query: { llm: "1 para probar la API key de Gemini con una llamada real" },
+        query: { llm: "1 para probar la API key de OpenAI con una llamada real" },
         curl: `curl "${origin}/api/health?llm=1"`,
       },
       {

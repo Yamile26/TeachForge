@@ -6,7 +6,7 @@
 Navegador
    │
    ├── /api/extract    (modelo capaz)  ─┐
-   ├── /api/simulate   (modelo rápido) ─┼──►  Gemini
+   ├── /api/simulate   (modelo rápido) ─┼──►  OpenAI
    └── /api/evaluate   (modelo capaz)  ─┘
    │
    ├── /api/cases, /api/profile  ─────────►  Supabase (Postgres)

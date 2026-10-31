@@ -55,7 +55,7 @@ export default function Home() {
           <dd className="mt-1 font-mono text-sm">{dbMode()}</dd>
         </div>
         <div className="rounded-xl border border-neutral-200 p-4 dark:border-neutral-800">
-          <dt className="text-xs uppercase tracking-wide text-neutral-500">Gemini</dt>
+          <dt className="text-xs uppercase tracking-wide text-neutral-500">OpenAI</dt>
           <dd className="mt-1 font-mono text-sm">
             {llmConfigurado() ? "configurado" : "sin API key"}
           </dd>
