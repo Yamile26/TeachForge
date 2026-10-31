@@ -1,0 +1,40 @@
+{
+  "scores": [
+    {
+      "competencia": "diagnostico_del_error",
+      "puntaje": 2,
+      "evidencia": "«Antes de corregir, dime cómo pensaste ese 20 + 5»",
+      "mejora": "Preguntar también por qué creyó que el 5 cambia de signo, para distinguir receta de razonamiento."
+    },
+    {
+      "competencia": "estrategia_de_explicacion",
+      "puntaje": 2,
+      "evidencia": "«Si le quito 5 a un lado, se lo tengo que quitar al otro para que siga igual»",
+      "mejora": "Cerrar con un contraejemplo donde la regla mecánica dé un resultado absurdo (x negativa) y pedir que lo explique."
+    },
+    {
+      "competencia": "verificacion_de_la_comprension",
+      "puntaje": 1,
+      "evidencia": "«Ya, ahora hagan los ejercicios 4 al 8»",
+      "mejora": "Pedir un problema con paréntesis y una explicación oral a un compañero, en vez de más ejercicios iguales."
+    },
+    {
+      "competencia": "adaptacion_a_diferencias",
+      "puntaje": null,
+      "evidencia": null,
+      "mejora": "Nombrar al menos a Diego y a Camila en la conversación y darle a cada uno una tarea distinta."
+    }
+  ],
+  "summary": "Explicaste el equilibrio de la ecuación con un ejemplo ajustado al error, pero no confirmaste la causa antes de explicar ni verificaste con una tarea que distinga memorizar de entender. Camila llegó sola a la idea de igualdad: podrías usarla como evidencia de clase.",
+  "next_focus": "verificacion_de_la_comprension",
+  "comparacion_con_veterano": {
+    "coincidencias": [
+      "Usaste la idea de balanza y restaste lo mismo en ambos lados.",
+      "Partiste del error concreto del alumno y no de la definición."
+    ],
+    "diferencias": [
+      "María manipuló objetos antes de volver a la notación; tú te quedaste en el lenguaje algebraico.",
+      "María cerró pidiendo inventar una ecuación; tú cerraste con ejercicios iguales al ejemplo."
+    ]
+  }
+}

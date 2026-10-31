@@ -1,0 +1,67 @@
+{
+  "turnos": [
+    {
+      "respuestas": [
+        {
+          "alumno": "Rosa",
+          "texto": "Profe, en 3x + 5 = 20 paso el 5 y queda 3x = 20 + 5, entonces x = 25/3. ¿Está bien?"
+        },
+        {
+          "alumno": "Diego",
+          "texto": "Yo también lo pasé así, pero me da feo. ¿No era que el 5 pasa restando?"
+        },
+        {
+          "alumno": "Camila",
+          "texto": "A mí me dio 5. Solo lo hice, no sé cómo explicarlo, profe."
+        }
+      ],
+      "estado_oculto": [
+        { "alumno": "Rosa", "estado": "sigue_con_error" },
+        { "alumno": "Diego", "estado": "sigue_con_error" },
+        { "alumno": "Camila", "estado": "sigue_con_error" }
+      ]
+    },
+    {
+      "respuestas": [
+        {
+          "alumno": "Rosa",
+          "texto": "Ya, entonces si resto 5 a los dos lados queda 3x = 15, y eso sí tiene sentido porque bajé lo mismo de los dos lados."
+        },
+        {
+          "alumno": "Diego",
+          "texto": "Ah, era como la balanza. Ahora me da 5, pero me confundo cuando hay paréntesis, ahí no sé qué hacer."
+        },
+        {
+          "alumno": "Camila",
+          "texto": "Profe, o sea que no es que el 5 «pase», es que le quito 5 a los dos lados para no romper la igualdad. ¿Eso es?"
+        }
+      ],
+      "estado_oculto": [
+        { "alumno": "Rosa", "estado": "mejora_parcial" },
+        { "alumno": "Diego", "estado": "mejora_parcial" },
+        { "alumno": "Camila", "estado": "comprende" }
+      ]
+    },
+    {
+      "respuestas": [
+        {
+          "alumno": "Rosa",
+          "texto": "En 2(x + 3) = 14 no puedo restar 3 antes porque el 2 está multiplicando todo el paréntesis. Entonces divido entre 2 primero y me queda x + 3 = 7."
+        },
+        {
+          "alumno": "Diego",
+          "texto": "Ahí sí me salió: divido los dos lados entre 2 y luego resto 3. Igual puedo revisar con el resultado metiendo x = 4 en la ecuación."
+        },
+        {
+          "alumno": "Camila",
+          "texto": "Yo lo explicaría con la balanza: dos vasos iguales, así que lo que hay dentro también se reparte igual."
+        }
+      ],
+      "estado_oculto": [
+        { "alumno": "Rosa", "estado": "comprende" },
+        { "alumno": "Diego", "estado": "comprende" },
+        { "alumno": "Camila", "estado": "comprende" }
+      ]
+    }
+  ]
+}
