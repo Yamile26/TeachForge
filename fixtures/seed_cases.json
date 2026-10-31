@@ -1,0 +1,112 @@
+[
+  {
+    "id": "seed-ecuaciones-signos",
+    "created_at": "2026-10-29T15:00:00.000Z",
+    "author_alias": "Docente ejemplo A",
+    "years_experience": 22,
+    "subject": "Matemática",
+    "level": "1.º de secundaria",
+    "topic": "Ecuaciones de primer grado",
+    "raw_story": "Caso de ejemplo construido a partir del relato de la maqueta: los alumnos mueven términos cambiando el signo sin entender la igualdad.",
+    "validated_by_author": true,
+    "is_seed": true,
+    "consent_at": null,
+    "tags": ["diagnostico_del_error", "estrategia_de_explicacion"],
+    "titulo": "Ecuaciones de primer grado: el signo que se pierde al pasar el término",
+    "materia": "Matemática",
+    "nivel": "1.º de secundaria",
+    "tema": "Ecuaciones lineales de primer grado",
+    "concepto_clave": "Igualdad como balanza: lo que se hace a un lado se hace al otro",
+    "error_frecuente": {
+      "descripcion": "Mueven términos cambiando el signo sin entender por qué, y aplican la regla también cuando el término multiplica o está en un paréntesis.",
+      "ejemplo_alumno": "En 3x + 5 = 20 escriben 3x = 20 + 5.",
+      "por_que_ocurre": "Aprendieron el procedimiento como receta y a veces el resultado sale bien, lo que refuerza la regla aunque el razonamiento falle."
+    },
+    "estrategia_que_funciono": {
+      "descripcion": "Reemplazar la regla por una balanza física con objetos antes de volver a la notación.",
+      "pasos": [
+        "Armar una balanza con vasos y tapas.",
+        "Quitar la misma cantidad de ambos lados y anotarlo.",
+        "Traducir cada movimiento a la ecuación escrita.",
+        "Pedir inventar una ecuación de dos movimientos y explicarla."
+      ],
+      "condiciones": "Aula de 32, 45 minutos, trabajo en grupos de cuatro."
+    },
+    "lo_que_no_funciono": "Más ejemplos en la pizarra sin manipular objetos.",
+    "senal_de_comprension": "Un alumno pregunta solo si el factor también se quita de ambos lados.",
+    "contexto_aula": "Colegio público de Lima, vacíos en operaciones básicas.",
+    "perfiles_estudiantes": [
+      {
+        "nombre": "Rosa",
+        "perfil": "Aplica la regla mecánicamente.",
+        "como_se_manifiesta": "Resuelve los ejercicios iguales al ejemplo y se traba con paréntesis."
+      },
+      {
+        "nombre": "Diego",
+        "perfil": "Entiende el equilibrio pero falla en aritmética.",
+        "como_se_manifiesta": "Plantea bien y se equivoca al restar."
+      },
+      {
+        "nombre": "Camila",
+        "perfil": "Acierta de memoria sin poder explicar.",
+        "como_se_manifiesta": "Dice «me salió» y repite la regla."
+      }
+    ],
+    "campos_faltantes": ["¿Cómo evaluó al final de la unidad?"]
+  },
+  {
+    "id": "seed-comprension-inferencia",
+    "created_at": "2026-10-29T15:10:00.000Z",
+    "author_alias": "Docente ejemplo B",
+    "years_experience": 15,
+    "subject": "Comunicación",
+    "level": "3.º de secundaria",
+    "topic": "Comprensión lectora: inferencias",
+    "raw_story": "Caso de ejemplo: los alumnos responden preguntas literales pero no infieren, porque buscan la respuesta copiable en el texto.",
+    "validated_by_author": true,
+    "is_seed": true,
+    "consent_at": null,
+    "tags": ["diagnostico_del_error", "verificacion_de_la_comprension"],
+    "titulo": "Inferencias: buscar la respuesta copiable en vez de leer entre líneas",
+    "materia": "Comunicación",
+    "nivel": "3.º de secundaria",
+    "tema": "Inferencia en textos narrativos",
+    "concepto_clave": "Inferir es construir información que el texto no dice literalmente pero sostiene",
+    "error_frecuente": {
+      "descripcion": "Subrayan una frase del texto y la copian como respuesta, aunque la pregunta pida deducir algo que no está escrito.",
+      "ejemplo_alumno": "Ante «¿por qué el personaje mintió?», copian «el personaje dijo una mentira».",
+      "por_que_ocurre": "En primaria se premiaba la respuesta literal; inferir exige una operación que nunca se les modeló."
+    },
+    "estrategia_que_funciono": {
+      "descripcion": "Modelar la inferencia en voz alta con un texto corto y marcar en dos columnas «lo que dice» y «lo que deduzco».",
+      "pasos": [
+        "Leer un párrafo corto en voz alta.",
+        "Escribir en la pizarra dos columnas: dice / deduzco.",
+        "Pensar en voz alta una inferencia y señalar la pista textual que la sostiene.",
+        "Pedir que cambien una palabra del texto y decir qué inferencia se cae."
+      ],
+      "condiciones": "Textos de 150 palabras, 40 minutos, pizarra dividida."
+    },
+    "lo_que_no_funciono": "Explicar la diferencia entre literal e inferencial con definiciones y pedir más preguntas de práctica.",
+    "senal_de_comprension": "Un alumno dice «esa respuesta no está en el texto, pero se puede saber porque…» y cita la pista.",
+    "contexto_aula": "Sección con 28 alumnos, hábito lector bajo.",
+    "perfiles_estudiantes": [
+      {
+        "nombre": "Luis",
+        "perfil": "Copia frases del texto como respuesta.",
+        "como_se_manifiesta": "Sus respuestas repiten palabras del enunciado."
+      },
+      {
+        "nombre": "Ana",
+        "perfil": "Infiere bien pero no sabe justificar.",
+        "como_se_manifiesta": "Acierta y dice «porque sí»."
+      },
+      {
+        "nombre": "Marco",
+        "perfil": "Lee lento y pierde el hilo del párrafo.",
+        "como_se_manifiesta": "Responde sobre la primera línea y se detiene."
+      }
+    ],
+    "campos_faltantes": ["¿Qué tipos de texto usó además del narrativo?"]
+  }
+]

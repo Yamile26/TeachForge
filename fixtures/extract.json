@@ -1,0 +1,46 @@
+{
+  "titulo": "Ecuaciones de primer grado: el signo que se pierde al pasar el término",
+  "materia": "Matemática",
+  "nivel": "1.º de secundaria",
+  "tema": "Ecuaciones lineales de primer grado",
+  "concepto_clave": "Igualdad como balanza: lo que se hace a un lado se hace al otro; no se «pasa» cambiando el signo",
+  "error_frecuente": {
+    "descripcion": "Al despejar x, mueven el término de un lado al otro cambiando el signo sin entender por qué, y aplican esa regla también cuando el término está multiplicando o dentro de un paréntesis.",
+    "ejemplo_alumno": "En 3x + 5 = 20 escriben 3x = 20 + 5, y en 2(x + 3) = 14 escriben 2x + 3 = 14.",
+    "por_que_ocurre": "Aprendieron el procedimiento como una receta («lo que suma pasa restando») sin la idea de equilibrio. Como el resultado a veces sale bien, la regla se refuerza aunque el razonamiento falle."
+  },
+  "estrategia_que_funciono": {
+    "descripcion": "Reemplacé la regla por una balanza física con objetos antes de volver a la notación algebraica.",
+    "pasos": [
+      "Armé una balanza con una regla y dos vasos: un vaso con tapas (la x) y tapas sueltas al otro lado.",
+      "Pedí que quitaran 5 tapas de ambos lados al mismo tiempo y anotaran lo que quedaba en el cuaderno.",
+      "Recién después tradujimos cada movimiento a la ecuación escrita, al lado de la balanza.",
+      "Les pedí inventar una ecuación que se resolviera con dos movimientos y explicarla a un compañero."
+    ],
+    "condiciones": "Aula de 32 estudiantes, 45 minutos, tapas y vasos del aula. Funcionó mejor en grupos de cuatro con un cuaderno por grupo."
+  },
+  "lo_que_no_funciono": "Explicar la regla con más ejemplos en la pizarra y decir «es lo mismo que en la balanza» sin manipular objetos: los alumnos que ya tenían la regla memorizada la siguieron aplicando mal.",
+  "senal_de_comprension": "Cuando un alumno preguntó «¿y si el 3 está multiplicando también lo tengo que quitar de los dos lados?» y respondió solo, sin mirarme.",
+  "contexto_aula": "Colegio público de Lima, 1.º de secundaria, muchos alumnos con vacíos en operaciones básicas y llegada irregular por trabajo familiar.",
+  "perfiles_estudiantes": [
+    {
+      "nombre": "Rosa",
+      "perfil": "Aplica la regla mecánicamente y se traba si cambia la forma de la ecuación.",
+      "como_se_manifiesta": "Resuelve rápido los ejercicios iguales al ejemplo y se queda en blanco cuando hay paréntesis."
+    },
+    {
+      "nombre": "Diego",
+      "perfil": "Entiende la idea del equilibrio pero se equivoca en la aritmética al operar.",
+      "como_se_manifiesta": "Plantea bien el movimiento y se equivoca al restar; se frustra y abandona."
+    },
+    {
+      "nombre": "Camila",
+      "perfil": "Llega al resultado correcto de memoria pero no puede explicar por qué funciona.",
+      "como_se_manifiesta": "Dice «me salió» y, si le pides explicar, repite la regla sin convencimiento."
+    }
+  ],
+  "campos_faltantes": [
+    "¿Cuántas sesiones necesitó para que la mayoría lo entendiera?",
+    "¿Cómo evaluó el aprendizaje al final de la unidad?"
+  ]
+}
