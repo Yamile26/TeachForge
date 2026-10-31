@@ -1,4 +1,4 @@
-<p align="center"><img src="public/brand/teachforge-logo-horizontal.png" alt="TeachForge" width="420"></p>
+<p align="center"><img src="public/brand/teachforge-logo-ilustrado.jpg" alt="TeachForge: empoderando a los maestros del Perú" width="520"></p>
 
 # TeachForge
 

@@ -1,52 +1,54 @@
 @import "tailwindcss";
 
 /*
- * Identidad TeachForge: acero (la estructura, el oficio) + fragua (la chispa que se transmite).
+ * Paleta tomada del logo ilustrado de TeachForge (public/brand/teachforge-logo-ilustrado.jpg):
+ * azul marino del emblema (estructura), rojo Perú de «Forge» (acento), granate de los
+ * chalecos (error), dorado del foco (advertencia) y verde andino de Machu Picchu (logro).
  * Todos los colores son tokens; el modo oscuro solo los redefine.
  */
 :root {
-  --bg: #f3f5f9;
+  --bg: #f7f6f9;
   --surface: #ffffff;
-  --sunk: #e9edf4;
-  --ink: #17203a;
-  --muted: #58627c;
-  --line: #d9dfea;
-  --steel: #24345a;
+  --sunk: #eeeef4;
+  --ink: #14162b;
+  --muted: #5a5d78;
+  --line: #dedfe8;
+  --steel: #14162b;
   --steel-ink: #ffffff;
-  --ember: #e07b22;
-  --ember-ink: #3b1c02;
-  --ember-soft: #fdebd8;
-  --good: #23845a;
-  --good-soft: #ddf2e8;
-  --warn: #a87400;
-  --warn-soft: #fbf0d3;
-  --bad: #bc3b33;
-  --bad-soft: #f9e1df;
-  --ia: #5b4bc8;
-  --ia-soft: #e9e6fb;
+  --ember: #d9262e;
+  --ember-ink: #ffffff;
+  --ember-soft: #fde6e6;
+  --good: #2f7a3e;
+  --good-soft: #e1f1e3;
+  --warn: #9a6a00;
+  --warn-soft: #fff2d6;
+  --bad: #8e1f2f;
+  --bad-soft: #f6e1e4;
+  --ia: #4f4aa8;
+  --ia-soft: #e8e7f7;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #0e121b;
-    --surface: #161c29;
-    --sunk: #1c2333;
-    --ink: #e7ebf3;
-    --muted: #9aa4ba;
-    --line: #2a3348;
-    --steel: #9db3e4;
-    --steel-ink: #0e121b;
-    --ember: #f39a45;
-    --ember-ink: #2a1404;
-    --ember-soft: #3a2715;
-    --good: #5cc495;
-    --good-soft: #15302a;
-    --warn: #e2b33e;
-    --warn-soft: #332a12;
-    --bad: #ef7b72;
-    --bad-soft: #3a1e1d;
-    --ia: #a99cf5;
-    --ia-soft: #252041;
+    --bg: #0d0f1e;
+    --surface: #15182c;
+    --sunk: #1c2038;
+    --ink: #ecedf5;
+    --muted: #a0a3bd;
+    --line: #2a2e4a;
+    --steel: #c9cef0;
+    --steel-ink: #14162b;
+    --ember: #f0474d;
+    --ember-ink: #1a0204;
+    --ember-soft: #3a1519;
+    --good: #6cc07a;
+    --good-soft: #16301c;
+    --warn: #febe64;
+    --warn-soft: #33280f;
+    --bad: #e8707e;
+    --bad-soft: #3a1820;
+    --ia: #a9a4f0;
+    --ia-soft: #24224a;
     color-scheme: dark;
   }
 }

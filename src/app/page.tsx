@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { dbMode } from "@/lib/db";
 import { demoActivo } from "@/lib/demo";
@@ -33,6 +34,14 @@ export default function Home() {
         </div>
 
         <div className="grid gap-3.5">
+          <Image
+            src="/brand/teachforge-logo-ilustrado.jpg"
+            alt="TeachForge: dos docentes peruanos con libros y una tableta, junto al mapa del Perú y Machu Picchu. Empoderando a los maestros del Perú."
+            width={1536}
+            height={1024}
+            priority
+            className="h-auto w-full rounded-xl border border-line bg-white"
+          />
           <p className="eyebrow">¿Cómo entras hoy?</p>
           <RolLink
             href="/capture"
